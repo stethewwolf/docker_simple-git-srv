@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  simple-git-server:
+    build:
+      context: .
+    # args:
+
+    image: simple-git-server
+    container_name: simple-git-server
+
+    ports:
+      - "8080:80"     # HTTP port
+      - "2222:22"     # SSH port
+    environment:
+      - PROJECTS_LIST=                      # Scan repos when list is empty
+    cap_add:
+      - sys_ptrace                          # Only here to help testing
+    volumes:
+      - /etc/localtime:/etc/localtime:ro    # Use host timezone
+      #- gitolite-home:/var/www/git/
+
+volumes:
+  gitolite-home:
