@@ -35,13 +35,16 @@ RUN ln -s "/etc/apache2/sites-available/000-gitweb.conf" "/etc/apache2/sites-ena
 RUN a2enmod alias cgi suexec
 COPY --chown="0:0" --chmod="644" -- "./config/suexex.conf" "/etc/apache2/suexec/git"
 
+RUN sed -i 's/www-data/git/g' /etc/apache2/envvars
+RUN sed -i 's/www-data/git/g' /etc/apache2/envvars
+
 ### copy scripts 
 ADD --chown="0:0" --chmod="755" -- "./scripts" "/usr/local/bin"
 
 ### create the git user 
 ARG GIT_USER="git"
 ARG GIT_ADMIN="gitolite"
-ARG GIT_HOME_DIR="/var/www/$GIT_USER/"
+ARG GIT_HOME_DIR="/var/lib/$GIT_USER/"
 ARG GIT_REPO_DIR="$GIT_HOME_DIR/repositories"
 ARG GIT_BIN_DIR="$GIT_HOME_DIR/bin"
 ARG GIT_WEB_ROOT="/usr/share/gitweb"
@@ -57,19 +60,9 @@ RUN echo "export GIT_LOG_DIR=$GIT_LOG_DIR" >> /etc/environment
 RUN echo "export GIT_BIN_DIR=$GIT_BIN_DIR" >> /etc/environment
 RUN echo "export GIT_TMP_DIR=$GIT_TMP_DIR" >> /etc/environment
 
-
 RUN groupadd --system ssh
 RUN useradd --create-home --home-dir $GIT_HOME_DIR --system --user-group --groups ssh $GIT_USER
-
-USER $GIT_USER
-RUN mkdir $GIT_HOME_DIR/.ssh
-RUN mkdir $GIT_LOG_DIR
-RUN mkdir $GIT_TMP_DIR
-RUN mkdir $GIT_BIN_DIR
-
-ENV LANGUAGE = "en_US.UTF-8"
-ENV LC_ALL = "en_US.UTF-8"
-ENV LANG = "en_US.UTF-8"
+RUN chown -R $GIT_USER: $GIT_HOME_DIR
 
 RUN echo "/etc/environment" >> $GIT_HOME_DIR/.bashrc
 RUN echo 'export PATH=$GIT_BIN_DIR:$PATH' >> $GIT_HOME_DIR/.bashrc

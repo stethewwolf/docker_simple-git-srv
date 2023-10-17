@@ -13,12 +13,12 @@ services:
       - "8080:80"     # HTTP port
       - "2222:22"     # SSH port
     environment:
-      - PROJECTS_LIST=                      # Scan repos when list is empty
+      GIT_ADMIN: gitolite
     cap_add:
       - sys_ptrace                          # Only here to help testing
     volumes:
       - /etc/localtime:/etc/localtime:ro    # Use host timezone
-      #- gitolite-home:/var/www/git/
+      - gitolite-home:/var/lib/git/
 
 volumes:
   gitolite-home:
