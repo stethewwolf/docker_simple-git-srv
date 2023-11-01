@@ -6,7 +6,7 @@ service base on:
 * [gitolite](https://gitolite.com/gitolite/index.html)
 * [gitweb](https://git-scm.com/docs/gitweb)
 
-The git content will be avaialble via http and ssh ( the docker container contains a apache2 and sshd server).
+The git content will be avaialble via http and ssh ( the docker container contains a nginx and sshd server).
 
 The git server can be managed throught the gitolite-admin repository.
 
@@ -50,8 +50,8 @@ The defaul content is :
 |						keys pai is generated 
 |-- bin
 |-- log
-|   |-- http-access.log
-|   `-- http-error.log
+|   |-- nginx-access.log
+|   `-- nginx-error.log
 |-- projects.list
 |-- repositories			# this folder contains bare repositories
 |   |-- gitolite-admin.git
