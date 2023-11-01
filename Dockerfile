@@ -17,9 +17,11 @@ RUN apt-get update && \
     git \
     gitolite3 \
     gitweb \
-    apache2 \
-    apache2-suexec-custom \
+    nginx \
+    fcgiwrap \
+    spawn-fcgi \
     openssh-server \
+    apache2-utils \
     && apt-get clean
 
 ### configure ssh server
@@ -28,15 +30,11 @@ COPY --chown="0:0" --chmod="644" -- "./config/sshd_config.conf" "/etc/ssh/ssh_co
 ### configure gitweb
 COPY --chown="0:0" --chmod="644" -- "./config/gitweb.conf" "/etc/gitweb.conf"
 
-## configure apache2
-RUN rm -rf /etc/apache2/sites-enabled/000-default.conf
-COPY --chown="0:0" --chmod="644" -- "./config/apache2.conf" "/etc/apache2/sites-available/000-gitweb.conf"
-RUN ln -s "/etc/apache2/sites-available/000-gitweb.conf" "/etc/apache2/sites-enabled/000-gitweb.conf"
-RUN a2enmod alias cgi suexec
-COPY --chown="0:0" --chmod="644" -- "./config/suexex.conf" "/etc/apache2/suexec/git"
-
-RUN sed -i 's/www-data/git/g' /etc/apache2/envvars
-RUN sed -i 's/www-data/git/g' /etc/apache2/envvars
+## configure nginx
+RUN sed -i 's/www-data/git/g' /etc/nginx/nginx.conf
+RUN rm -rf /etc/nginx/sites-enabled/default
+COPY --chown="0:0" --chmod="644" -- "./config/nginx.conf" "/etc/nginx/sites-available/gitweb.conf"
+RUN ln -s "/etc/nginx/sites-available/gitweb.conf" "/etc/nginx/sites-enabled/gitweb.conf"
 
 ### copy scripts 
 ADD --chown="0:0" --chmod="755" -- "./scripts" "/usr/local/bin"

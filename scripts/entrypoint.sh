@@ -18,8 +18,11 @@ chown -R $GIT_USER: $GIT_HOME_DIR
 # start sshd
 /etc/init.d/ssh start
 
-# start apache2 
-/etc/init.d/apache2 start
+# spawn fcgi 
+spawn-fcgi -s /var/run/fcgiwrap.socket -M 766 /usr/sbin/fcgiwrap
+
+# start nginx 
+/etc/init.d/nginx start
 
 echo "##################################################"
 echo ""
