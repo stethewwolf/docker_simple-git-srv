@@ -22,7 +22,12 @@ RUN apt-get update && \
     spawn-fcgi \
     openssh-server \
     apache2-utils \
+    locales \
     && apt-get clean
+
+
+### configure locales
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
 ### configure ssh server
 COPY --chown="0:0" --chmod="644" -- "./config/sshd_config.conf" "/etc/ssh/ssh_config.d/custom.conf"
@@ -57,6 +62,10 @@ RUN echo "export GIT_WEB_ROOT=$GIT_WEB_ROOT" >> /etc/environment
 RUN echo "export GIT_LOG_DIR=$GIT_LOG_DIR" >> /etc/environment
 RUN echo "export GIT_BIN_DIR=$GIT_BIN_DIR" >> /etc/environment
 RUN echo "export GIT_TMP_DIR=$GIT_TMP_DIR" >> /etc/environment
+Run echo "export LANGUAGE=en_US.UTF-8" >> /etc/environment
+Run echo "export LC_ALL=en_US.UTF-8" >> /etc/environment
+Run echo "export LANG=en_US.UTF-8" >> /etc/environment
+Run echo "export LC_CTYPE=en_US.UTF-8" >> /etc/environment
 
 RUN groupadd --system ssh
 RUN useradd --create-home --home-dir $GIT_HOME_DIR --system --user-group --groups ssh $GIT_USER
