@@ -6,14 +6,14 @@ source /etc/environment
 # print environment
 /usr/local/bin/print-gitolite-env.sh
 
+# make sure permission are correct
+chown -R $GIT_USER: $GIT_HOME_DIR
+
 # setup gitolite
 # this script is executed only if the file $GIT_HOME_DIR/.gitolite.rc does not exists
 if [ ! -f $GIT_HOME_DIR/.gitolite.rc ]; then
     su -c '/usr/local/bin/setup-gitolite.sh' $GIT_USER
 fi
-
-# make sure permission are correct
-chown -R $GIT_USER: $GIT_HOME_DIR
 
 # start sshd
 /etc/init.d/ssh start
