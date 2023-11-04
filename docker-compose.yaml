@@ -18,7 +18,9 @@ services:
       - sys_ptrace                          # Only here to help testing
     volumes:
       - /etc/localtime:/etc/localtime:ro    # Use host timezone
+      - sshd:/etc/ssh/
       - gitolite-home:/var/lib/git/
 
 volumes:
   gitolite-home:
+  sshd:
