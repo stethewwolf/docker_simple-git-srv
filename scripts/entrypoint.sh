@@ -6,6 +6,10 @@ source /etc/environment
 # print environment
 /usr/local/bin/print-gitolite-env.sh
 
+# mv gitolite config file
+mv /etc/gitweb.conf $GIT_HOME_DIR/gitweb.conf
+ln -s $GIT_HOME_DIR/gitweb.conf /etc/gitweb.conf
+
 # make sure permission are correct
 chown -R $GIT_USER: $GIT_HOME_DIR
 
