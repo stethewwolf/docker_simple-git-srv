@@ -9,7 +9,6 @@ EXPOSE	22
 
 ## configure the system
 ### install system requirements packages
-
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
@@ -24,7 +23,6 @@ RUN apt-get update && \
     apache2-utils \
     locales \
     && apt-get clean
-
 
 ### configure locales
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
@@ -54,6 +52,7 @@ ARG GIT_WEB_ROOT="/usr/share/gitweb"
 ARG GIT_LOG_DIR="$GIT_HOME_DIR/log"
 ARG GIT_TMP_DIR="$GIT_HOME_DIR/tmp"
 
+# define env varialbes
 RUN echo "" >> /etc/environment
 RUN echo "export GIT_USER=$GIT_USER" >> /etc/environment
 RUN echo "export GIT_ADMIN=$GIT_ADMIN" >> /etc/environment
@@ -67,6 +66,7 @@ Run echo "export LC_ALL=en_US.UTF-8" >> /etc/environment
 Run echo "export LANG=en_US.UTF-8" >> /etc/environment
 Run echo "export LC_CTYPE=en_US.UTF-8" >> /etc/environment
 
+# create and cofigure container user
 RUN groupadd --system ssh
 RUN useradd --create-home --home-dir $GIT_HOME_DIR --system --user-group --groups ssh $GIT_USER
 RUN chown -R $GIT_USER: $GIT_HOME_DIR
@@ -79,8 +79,10 @@ RUN echo 'export PATH=$GIT_BIN_DIR:$PATH' >> $GIT_HOME_DIR/.bashrc
 USER root
 WORKDIR /
 
+# define entrypoint
 ENTRYPOINT ["entrypoint.sh"]
 
+# run sleep infinity
 CMD [ "/usr/bin/sleep", "infinity" ]
 
 
