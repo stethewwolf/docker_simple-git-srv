@@ -22,6 +22,9 @@ RUN apt-get update && \
     openssh-server \
     apache2-utils \
     locales \
+    python3-git \
+    python3-yaml \
+    cron \
     && apt-get clean
 
 ### configure locales
