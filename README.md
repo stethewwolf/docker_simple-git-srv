@@ -125,6 +125,7 @@ now you should be able to see at least one repo:
 ![projects_list](pictures/projects_list.png)
 
 
+
 ## References
 * [git](https://git-scm.com/)
 * [gitolite](https://gitolite.com/gitolite/index.html)
