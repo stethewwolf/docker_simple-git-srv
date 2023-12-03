@@ -31,7 +31,7 @@ RUN apt-get update && \
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
 ### configure ssh server
-COPY --chown="0:0" --chmod="644" -- "./config/sshd_config.conf" "/etc/ssh/ssh_config.d/custom.conf"
+COPY --chown="0:0" --chmod="644" -- "./config/sshd_config.conf" "/etc/ssh/sshd_config.d/custom.conf"
 
 ### configure gitweb
 COPY --chown="0:0" --chmod="644" -- "./config/gitweb.conf" "/etc/gitweb.conf"
