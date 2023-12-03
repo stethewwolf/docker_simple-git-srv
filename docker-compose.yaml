@@ -19,8 +19,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro    # Use host timezone
       - sshd:/etc/ssh/
-      - gitolite-home:/var/lib/git/
+      - /home/stethewwolf/tmp/test-git/mount:/var/lib/git/
+      #- gitolite-home:/var/lib/git/
 
 volumes:
-  gitolite-home:
   sshd:
+#gitolite-home:

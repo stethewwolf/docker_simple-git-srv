@@ -67,6 +67,8 @@ cp -v conf/gitconfig $HOME/.gitconfig
 cp -v conf/gitolite.rc $HOME/.gitolite.rc
 cp -v conf/gitweb.conf $HOME/gitweb.conf
 cp -v conf/mirrors.yaml $HOME/mirrors.yaml
+
+#git-mirror $HOME/mirrors.yaml
 EOF
 chmod +x $GIT_TMP_DIR/server-admin/update-server.sh
 
@@ -75,10 +77,10 @@ cat > $GIT_TMP_DIR/server-admin/conf/mirrors.yaml <<EOF
 repos:
 #  - remote-url: "https://github.com/bit-team/backintime.git"
 #    remote-name: "github"
-#    local-repo: "test/backintime.git"
+#    local-repo: /var/lib/git/repositories/backintime.git
 #  - remote-url: "https://github.com/flathub/flathub.git"
 #    remote-name: "github"
-#    local-repo: "test/flathub.git"
+#    local-repo: /var/lib/git/repositories/flathub.git
 EOF
 
 ### commit the changes

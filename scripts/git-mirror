@@ -21,6 +21,10 @@ def clone_repo(repo_dict):
 
 def pull_repo(repo_dict):
     repo = git.Repo(repo_dict["local-repo"])
+
+    if repo_dict["remote-name"] not in repo.remotes:
+        repo.create_remote(repo_dict["remote-name"],repo_dict["remote-url"])
+
     for remote in repo.remotes:
         update_remote(remote)
 
