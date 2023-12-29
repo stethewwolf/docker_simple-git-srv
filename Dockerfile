@@ -31,19 +31,27 @@ RUN apt-get update && \
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
 ### configure ssh server
-COPY --chown="0:0" --chmod="644" -- "./config/sshd_config.conf" "/etc/ssh/sshd_config.d/custom.conf"
+COPY "./config/sshd_config.conf" "/etc/ssh/sshd_config.d/custom.conf"
+RUN chown root:root /etc/ssh/sshd_config.d/custom.conf
+RUN chmod 644 /etc/ssh/sshd_config.d/custom.conf
 
 ### configure gitweb
-COPY --chown="0:0" --chmod="644" -- "./config/gitweb.conf" "/etc/gitweb.conf"
+COPY "./config/gitweb.conf" "/etc/gitweb.conf"
+RUN chmod 644 "/etc/gitweb.conf"
+RUN chown root:root "/etc/gitweb.conf"
 
 ## configure nginx
 RUN sed -i 's/www-data/git/g' /etc/nginx/nginx.conf
 RUN rm -rf /etc/nginx/sites-enabled/default
-COPY --chown="0:0" --chmod="644" -- "./config/nginx.conf" "/etc/nginx/sites-available/gitweb.conf"
+COPY "./config/nginx.conf" "/etc/nginx/sites-available/gitweb.conf"
+RUN chmod 644 "/etc/nginx/sites-available/gitweb.conf"
+RUN chown root:root "/etc/nginx/sites-available/gitweb.conf"
 RUN ln -s "/etc/nginx/sites-available/gitweb.conf" "/etc/nginx/sites-enabled/gitweb.conf"
 
 ### copy scripts 
-ADD --chown="0:0" --chmod="755" -- "./scripts" "/usr/local/bin"
+ADD "./scripts" "/usr/local/bin"
+RUN chown -R root:root "/usr/local/bin"
+RUN chmod -R 755 "/usr/local/bin/"
 
 ### create the git user 
 ARG GIT_USER="git"
