@@ -14,7 +14,7 @@ def update_remote(remote):
         try:
             remote.fetch(rfps)
         except:
-            print("error fetching from remote : {}".format(remote))
+            print("error fetching from remote: {} for ref: {} with {}".format(remote, r, rfps))
 
 def clone_repo(repo_dict):
     repo = git.Repo.init(repo_dict["local-repo"], bare=True)
