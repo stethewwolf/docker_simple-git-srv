@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # load environment vars
 source /etc/environment
