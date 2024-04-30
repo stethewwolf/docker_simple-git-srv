@@ -56,6 +56,7 @@ RUN chmod -R 755 "/usr/local/bin/"
 
 ### create the git user 
 ARG GIT_USER="git"
+ARG GIT_USER_ID="888"
 ARG GIT_ADMIN="gitolite"
 ARG GIT_HOME_DIR="/var/lib/$GIT_USER/"
 ARG GIT_REPO_DIR="$GIT_HOME_DIR/repositories"
@@ -80,7 +81,7 @@ Run echo "export LC_CTYPE=en_US.UTF-8" >> /etc/environment
 
 # create and cofigure container user
 RUN groupadd --system ssh
-RUN useradd --create-home --home-dir $GIT_HOME_DIR --system --user-group --groups ssh $GIT_USER
+RUN useradd --create-home --home-dir $GIT_HOME_DIR --system --user-group --uid $GIT_USER_ID --groups ssh $GIT_USER
 RUN chown -R $GIT_USER: $GIT_HOME_DIR
 
 RUN echo "/etc/environment" >> $GIT_HOME_DIR/.bashrc
