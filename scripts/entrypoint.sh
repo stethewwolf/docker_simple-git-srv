@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # load environment vars
 source /etc/environment
@@ -13,7 +13,7 @@ ln -sv $GIT_HOME_DIR/gitweb.conf /etc/gitweb.conf
 fi
 
 # make sure permission are correct
-chown -R $GIT_USER: $GIT_HOME_DIR
+chown -vR $GIT_USER: $GIT_HOME_DIR
 
 # setup gitolite
 # this script is executed only if the file $GIT_HOME_DIR/.gitolite.rc does not exists
