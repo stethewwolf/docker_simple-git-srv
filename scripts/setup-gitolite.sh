@@ -37,6 +37,9 @@ if [ ! -d $GIT_HOME_DIR/.gitolite ]; then
 fi
 
 crontab -l > $GIT_TMP_DIR/mycron
-echo "0 2 * * * /usr/local/bin/git-mirror $HOME/mirrors.yaml" >> $GIT_TMP_DIR/mycron 
+echo "0 2 * * * /usr/local/bin/gitolite-mirror" >> $GIT_TMP_DIR/mycron 
 crontab $GIT_TMP_DIR/mycron
 rm $GIT_TMP_DIR/mycron
+
+echo registerd crontab for git 
+crontab -l 
