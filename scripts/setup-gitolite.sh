@@ -43,3 +43,5 @@ rm $GIT_TMP_DIR/mycron
 
 echo registerd crontab for git 
 crontab -l 
+
+
