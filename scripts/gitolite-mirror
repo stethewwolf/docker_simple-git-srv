@@ -13,18 +13,18 @@ for repo_conf_file in $(ls $GITOLITE_CONF_REPO_FOLDER/); do
     result=$?
 
     if [ $result -eq 0 ]; then 
-        remote_url=$(grep  $REMOTE_REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file | cut -d " " -f 4 )
-        local_repo=$(grep  $REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file | cut -d " " -f 2 )
+        remote_url=$(grep $REMOTE_REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file | sed 's/^[   ]*//;s/[    ]*$//' | cut -d " " -f 4 )
+        local_repo=$(grep $REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file | cut -d " " -f 2 )
 
-        cd $GITOLITE_REPO_FOLDER/$local_repo/
+        cd $GITOLITE_REPO_FOLDER/$local_repo.git/
 
-        git remote get-url $REMOTE_NAME  2>&1 > /dev/null 
+        git remote get-url $REMOTE_NAME 2>&1 > /dev/null 
         result=$?
-        if [ $result -eq 0 ]; then 
-            git remote add $REMOTE_NAME $remote_url
+        if [ $result -ne 0 ]; then 
+            git remote add --mirror=fetch  $REMOTE_NAME $remote_url
         fi
 
-        git fetch
+	git fetch
 
     fi
 done
