@@ -98,4 +98,3 @@ ENTRYPOINT ["entrypoint.sh"]
 # run sleep infinity
 CMD [ "/usr/bin/sleep", "infinity" ]
 
-

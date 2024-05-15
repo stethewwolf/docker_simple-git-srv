@@ -124,11 +124,11 @@ now you should be able to see at least one repo:
 
 ![projects_list](pictures/projects_list.png)
 
-
-
-
 ## References
 * [git](https://git-scm.com/)
 * [gitolite](https://gitolite.com/gitolite/index.html)
 * [gitweb](https://git-scm.com/docs/gitweb)
+* [how to grep and execute a command for every match](https://stackoverflow.com/questions/13402119/how-to-grep-and-execute-a-command-for-every-match)
+* [bash trim whitespace](https://ioflood.com/blog/bash-trim-whitespace/)
+* [how-to-get-gitolite-gitweb-working-together](https://stackoverflow.com/questions/9777459/how-to-get-gitolite-gitweb-working-together)
 

@@ -17,9 +17,10 @@ chown -vR $GIT_USER: $GIT_HOME_DIR
 
 # setup gitolite
 # this script is executed only if the file $GIT_HOME_DIR/.gitolite.rc does not exists
-if [ ! -f $GIT_HOME_DIR/.gitolite.rc ]; then
-    su -c '/usr/local/bin/setup-gitolite.sh' $GIT_USER
-fi
+su -c '/usr/local/bin/setup-gitolite.sh' $GIT_USER
+
+# sync mirror repos at start
+su -c '/usr/local/bin/gitolite-mirror' $GIT_USER
 
 # setup gitserver management repo
 # this script create the repo server-admin and adds relevant config files
