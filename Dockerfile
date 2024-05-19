@@ -87,6 +87,9 @@ RUN chown -R $GIT_USER: $GIT_HOME_DIR
 RUN echo "/etc/environment" >> $GIT_HOME_DIR/.bashrc
 RUN echo 'export PATH=$GIT_BIN_DIR:$PATH' >> $GIT_HOME_DIR/.bashrc
 
+# add crontab for gitolite-mirror
+COPY config/crontab /etc/cron.d/gitolite
+
 # Entrypoint, how container is run
 # use root user
 USER root
