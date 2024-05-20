@@ -28,6 +28,9 @@ if [ ! -d "$GIT_HOME_DIR/repositories/server-admin.git" ]; then
     su -c '/usr/local/bin/create-server-admin-repo.sh' $GIT_USER
 fi
 
+# start cron
+/etc/init.d/cron start
+
 # start sshd
 /etc/init.d/ssh start
 
