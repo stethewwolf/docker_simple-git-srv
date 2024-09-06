@@ -1,31 +1,32 @@
 #!/bin/bash
 
-set -x
+#set -x
 
 GITOLITE_CONF_REPO_FOLDER="$GIT_HOME_DIR/.gitolite/conf/repos/"
 GITOLITE_REPO_FOLDER="$GIT_HOME_DIR/repositories"
-REMOTE_REPO_KEY="remote.url"
+REMOTE_REPO_KEY="upstream"
 REPO_KEY="repo"
-REMOTE_NAME="origin"
+REMOTE_NAME="upstream"
 
-for repo_conf_file in $(ls $GITOLITE_CONF_REPO_FOLDER/); do
-    grep  $REMOTE_REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file 2>&1 > /dev/null 
-    result=$?
-
-    if [ $result -eq 0 ]; then 
-        remote_url=$(grep $REMOTE_REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file | sed 's/^[   ]*//;s/[    ]*$//' | cut -d " " -f 4 )
-        local_repo=$(grep $REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file | cut -d " " -f 2 )
-
-        cd $GITOLITE_REPO_FOLDER/$local_repo.git/
-
-        git remote get-url $REMOTE_NAME 2>&1 > /dev/null 
+if [ -d "$GITOLITE_CONF_REPO_FOLDER" ]; then
+    for repo_conf_file in $(ls $GITOLITE_CONF_REPO_FOLDER/); do
+        grep  $REMOTE_REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file 2>&1 > /dev/null 
         result=$?
-        if [ $result -ne 0 ]; then 
-            git remote add --mirror=fetch  $REMOTE_NAME $remote_url
+    
+        if [ $result -eq 0 ]; then 
+            remote_url=$(grep $REMOTE_REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file | sed 's/^[   ]*//;s/[    ]*$//' | cut -d " " -f 4 )
+            local_repo=$(grep $REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file | cut -d " " -f 2 )
+    
+            cd $GITOLITE_REPO_FOLDER/$local_repo.git/
+    
+            git remote get-url $REMOTE_NAME 2>&1 > /dev/null 
+            result=$?
+            if [ $result -ne 0 ]; then 
+                git remote add --mirror=fetch  $REMOTE_NAME $remote_url
+            fi
+    
+    	    git fetch $REMOTE_NAME
         fi
-
-	git fetch
-
-    fi
-done
-
+    
+    done
+fi

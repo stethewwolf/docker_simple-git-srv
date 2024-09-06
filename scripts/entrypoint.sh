@@ -22,12 +22,6 @@ su -c '/usr/local/bin/setup-gitolite.sh' $GIT_USER
 # sync mirror repos at start
 su -c '/usr/local/bin/gitolite-mirror' $GIT_USER
 
-# setup gitserver management repo
-# this script create the repo server-admin and adds relevant config files
-if [ ! -d "$GIT_HOME_DIR/repositories/server-admin.git" ]; then
-    su -c '/usr/local/bin/create-server-admin-repo.sh' $GIT_USER
-fi
-
 # start cron
 /etc/init.d/cron start
 

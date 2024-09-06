@@ -99,5 +99,6 @@ WORKDIR /
 ENTRYPOINT ["entrypoint.sh"]
 
 # run sleep infinity
-CMD [ "/usr/bin/sleep", "infinity" ]
+#CMD [ "/usr/bin/sleep", "infinity" ]
+CMD [ "tail", "-F", "/var/lib/git/log/nginx-error.log", "/var/lib/git/log/nginx-access.log" ]
 

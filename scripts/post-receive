@@ -1,0 +1,33 @@
+#!/bin/bash                                                                                                                                                                                                                                   
+
+echo "`basename "$0"`: start"
+
+RWD="$HOME/tmp/$GL_REPO-$RANDOM" # Repo Working Directory
+
+echo "`basename "$0"`: clonig repo.."
+git clone -b master $GL_REPO_BASE/$GL_REPO $RWD
+
+cd $RWD
+GIT_DIR="$RWD/.git"
+
+if [ -f "$RWD/server/gitconfig" ]; then
+  cp -v $RWD/server/gitconfig $HOME/.gitconfig
+fi
+
+if [ -f "$RWD/server/gitolite.rc" ]; then
+  cp -v $RWD/server/gitolite.rc $HOME/.gitolite.rc
+fi
+
+if [ -f "$RWD/server/gitweb.conf" ]; then
+  cp -v $RWD/server/gitweb.conf $HOME/gitweb.conf
+fi
+
+if [ -f "$RWD/server/buildbot-master.cfg" ]; then
+  cp -v $RWD/server/buildbot-master.cfg $HOME/master.cfg
+fi
+
+echo "`basename "$0"`: cleaning.."
+cd "$HOME/tmp/"
+rm -rf $RWD
+                                                                                                                                                                                                                                              
+echo "`basename "$0"`: end"    
