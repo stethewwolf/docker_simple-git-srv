@@ -11,5 +11,5 @@ if [[ $arch == "arm64" ]]; then
 fi
 
 docker build -t $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG .
-#docker push $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG
+docker push $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG
 
