@@ -2,7 +2,7 @@
 
 arch=$(dpkg --print-architecture)
 
-IMAGE_TAG="test"
+IMAGE_TAG="latest"
 IMAGE_NAME="simple-git-server"
 REGISTRY_URL="fenrir.stobi.local:5000"
 

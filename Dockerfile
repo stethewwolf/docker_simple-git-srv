@@ -25,6 +25,10 @@ RUN apt-get update && \
     locales \
     python3-git \
     python3-yaml \
+    python3-buildbot \
+    buildbot \
+    dumb-init \
+    python3-twisted \
     cron \
     && apt-get clean
 
@@ -64,6 +68,8 @@ ARG GIT_BIN_DIR="$GIT_HOME_DIR/bin"
 ARG GIT_WEB_ROOT="/usr/share/gitweb"
 ARG GIT_LOG_DIR="$GIT_HOME_DIR/log"
 ARG GIT_TMP_DIR="$GIT_HOME_DIR/tmp"
+ARG BUILDBOT_USER="buildbot"
+ARG BUILDBOT_HOME_DIR="/var/lib/$BUILDBOT_USER/"
 
 # define env varialbes
 RUN echo "" >> /etc/environment
@@ -78,14 +84,19 @@ Run echo "export LANGUAGE=en_US.UTF-8" >> /etc/environment
 Run echo "export LC_ALL=en_US.UTF-8" >> /etc/environment
 Run echo "export LANG=en_US.UTF-8" >> /etc/environment
 Run echo "export LC_CTYPE=en_US.UTF-8" >> /etc/environment
+Run echo "export BUILDBOT_USER=$BUILDBOT_USER" >> /etc/environment
+Run echo "export BUILDBOT_HOME_DIR=$BUILDBOT_HOME_DIR" >> /etc/environment
 
-# create and cofigure container user
+# create and cofigure git user
 RUN groupadd --system ssh
 RUN useradd --create-home --home-dir $GIT_HOME_DIR --system --user-group --uid $GIT_USER_ID --groups ssh $GIT_USER
 RUN chown -R $GIT_USER: $GIT_HOME_DIR
 
 RUN echo "/etc/environment" >> $GIT_HOME_DIR/.bashrc
 RUN echo 'export PATH=$GIT_BIN_DIR:$PATH' >> $GIT_HOME_DIR/.bashrc
+
+# create and cofigure git user
+RUN useradd --create-home --home-dir $BUILDBOT_HOME_DIR --system --gid $GIT_USER --groups ssh $BUILDBOT_USER
 
 # add crontab for gitolite-mirror
 COPY config/crontab /etc/cron.d/gitolite
@@ -99,6 +110,5 @@ WORKDIR /
 ENTRYPOINT ["entrypoint.sh"]
 
 # run sleep infinity
-#CMD [ "/usr/bin/sleep", "infinity" ]
-CMD [ "tail", "-F", "/var/lib/git/log/nginx-error.log", "/var/lib/git/log/nginx-access.log" ]
+CMD [ "/usr/bin/sleep", "infinity" ]
 
