@@ -34,6 +34,9 @@ spawn-fcgi -s /var/run/fcgiwrap.socket -M 766 /usr/sbin/fcgiwrap
 # start nginx 
 /etc/init.d/nginx start
 
+# start buildbot
+/etc/init.d/buildbot start
+
 echo "##################################################"
 echo ""
 echo "Environment setup completed successfully."

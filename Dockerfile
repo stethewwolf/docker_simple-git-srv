@@ -89,14 +89,18 @@ Run echo "export BUILDBOT_HOME_DIR=$BUILDBOT_HOME_DIR" >> /etc/environment
 
 # create and cofigure git user
 RUN groupadd --system ssh
-RUN useradd --create-home --home-dir $GIT_HOME_DIR --system --user-group --uid $GIT_USER_ID --groups ssh $GIT_USER
+RUN useradd --create-home --home-dir $GIT_HOME_DIR --system --user-group --uid $GIT_USER_ID --groups buildbot,ssh $GIT_USER
 RUN chown -R $GIT_USER: $GIT_HOME_DIR
 
-RUN echo "/etc/environment" >> $GIT_HOME_DIR/.bashrc
+RUN echo ". /etc/environment" >> $GIT_HOME_DIR/.bashrc
 RUN echo 'export PATH=$GIT_BIN_DIR:$PATH' >> $GIT_HOME_DIR/.bashrc
 
-# create and cofigure git user
-RUN useradd --create-home --home-dir $BUILDBOT_HOME_DIR --system --gid $GIT_USER --groups ssh $BUILDBOT_USER
+# override buildbot conf in /etc/default folder
+COPY config/etc_default_buildbot /etc/default/buildbot
+RUN /usr/bin/buildbot create-master /var/lib/buildbot
+RUN rm /var/lib/buildbot/master.cfg.sample
+COPY config/master.cfg /var/lib/buildbot/master.cfg
+RUN chown -R buildbot: /var/lib/buildbot/
 
 # add crontab for gitolite-mirror
 COPY config/crontab /etc/cron.d/gitolite

@@ -13,6 +13,8 @@ services:
     ports:
       - "8080:80"     # HTTP port
       - "2222:22"     # SSH port
+      - "9989:9989"
+      - "8010:8010"
     environment:
       GIT_ADMIN: gitolite
     cap_add:
