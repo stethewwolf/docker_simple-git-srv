@@ -5,10 +5,11 @@ This repository contains the Dockerfile, the docker-compose and other script nee
 service base on:
 * [gitolite](https://gitolite.com/gitolite/index.html)
 * [gitweb](https://git-scm.com/docs/gitweb)
+* [buildbot](https://www.buildbot.net/)
 
 The git content will be avaialble via http and ssh ( the docker container contains a nginx and sshd server).
 
-The git server can be managed throught the gitolite-admin repository.
+The server can be managed throught the gitolite-admin repository.
 
 ## Run The Container
 
@@ -62,7 +63,31 @@ The defaul content is :
 The system expect the admin public key with this skema:
 ```
 	$GIT_HOME_DIR/.ssh/$GIT_ADMIN.pub
-``` 
+```
+
+### Buildbot Data
+
+Inside the container all the git data is contained into the folder
+`/var/lib/buildbot`
+
+At the first run the folder contains:
+```
+/var/lib/buildbot/
+├── buildbot.tac
+├── http.log
+├── master.cfg # buildbot server configuration
+├── state.sqlite
+├── twistd.log
+└── twistd.pid
+```
+
+### Gitolite Customizations
+
+This project adds a custom `post-receive` hook which install:
+  * `gitolite-admin/server/gitconfig`  into `/var/lib/git/.gitconfig`
+  * `gitolite-admin/server/gitolite.rc`into `/var/lib/git/.gitolite.rc`
+  * `gitolite-admin/server/gitweb.conf`into `/var/lib/git/gitweb.conf`
+  * `gitolite-admin/server/master.cfg` into `/var/lib/buildbot/master.cfg`
 
 ## Next Steps
 
@@ -117,7 +142,6 @@ repo  testing
   config gitweb.owner = "Antonio Ospite"
   config gitweb.description = "Test repository"
   RW+ = @test_users
-
 ```
 
 now you should be able to see at least one repo:

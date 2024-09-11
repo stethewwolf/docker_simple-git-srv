@@ -22,8 +22,10 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro    # Use host timezone
       - sshd:/etc/ssh/
-      - gitolite-home:/var/lib/git/
+      - git-data:/var/lib/git/
+      - buildbot-data:/var/lib/buildbot/
 
 volumes:
   sshd:
-  gitolite-home:
+  git-data:
+  buildbot-data:
