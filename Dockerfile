@@ -25,12 +25,20 @@ RUN apt-get update && \
     locales \
     python3-git \
     python3-yaml \
-    python3-buildbot \
-    buildbot \
-    dumb-init \
-    python3-twisted \
+    python3 \
+    python3-pip \
     cron \
+    sudo \
+    build-essential \
+    python3-dev \
+    libssl-dev \
+    libffi-dev \
     && apt-get clean
+
+RUN pip3 install --break-system-packages 'buildbot[bundle]'
+
+COPY "./init.d/buildbot" "/etc/init.d/buildbot"
+RUN chmod 755 "/etc/init.d/buildbot"
 
 ### configure locales
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
@@ -68,6 +76,7 @@ ARG GIT_BIN_DIR="$GIT_HOME_DIR/bin"
 ARG GIT_WEB_ROOT="/usr/share/gitweb"
 ARG GIT_LOG_DIR="$GIT_HOME_DIR/log"
 ARG GIT_TMP_DIR="$GIT_HOME_DIR/tmp"
+ARG BUILDBOT_USER_ID="887"
 ARG BUILDBOT_USER="buildbot"
 ARG BUILDBOT_HOME_DIR="/var/lib/$BUILDBOT_USER/"
 
@@ -87,20 +96,26 @@ Run echo "export LC_CTYPE=en_US.UTF-8" >> /etc/environment
 Run echo "export BUILDBOT_USER=$BUILDBOT_USER" >> /etc/environment
 Run echo "export BUILDBOT_HOME_DIR=$BUILDBOT_HOME_DIR" >> /etc/environment
 
+# create and cofigure buildbot user
+RUN useradd --create-home --home-dir $BUILDBOT_HOME_DIR --system --user-group --uid $BUILDBOT_USER_ID $BUILDBOT_USER
+
 # create and cofigure git user
 RUN groupadd --system ssh
-RUN useradd --create-home --home-dir $GIT_HOME_DIR --system --user-group --uid $GIT_USER_ID --groups buildbot,ssh $GIT_USER
+RUN useradd --create-home --home-dir $GIT_HOME_DIR --system --user-group --uid $GIT_USER_ID --groups $BUILDBOT_USER,ssh $GIT_USER
 RUN chown -R $GIT_USER: $GIT_HOME_DIR
+COPY "./config/sudo" "/etc/sudoers.d/gitolite"
 
 RUN echo ". /etc/environment" >> $GIT_HOME_DIR/.bashrc
 RUN echo 'export PATH=$GIT_BIN_DIR:$PATH' >> $GIT_HOME_DIR/.bashrc
 
 # override buildbot conf in /etc/default folder
 COPY config/etc_default_buildbot /etc/default/buildbot
-RUN /usr/bin/buildbot create-master /var/lib/buildbot
+RUN /usr/local/bin/buildbot create-master /var/lib/buildbot
 RUN rm /var/lib/buildbot/master.cfg.sample
 COPY config/master.cfg /var/lib/buildbot/master.cfg
 RUN chown -R buildbot: /var/lib/buildbot/
+RUN chmod 775 /var/lib/buildbot/
+RUN chmod 664 /var/lib/buildbot/master.cfg
 
 # add crontab for gitolite-mirror
 COPY config/crontab /etc/cron.d/gitolite

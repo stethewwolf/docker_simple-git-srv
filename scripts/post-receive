@@ -2,10 +2,10 @@
 
 echo "`basename "$0"`: start"
 
-RWD="$HOME/tmp/$GL_REPO-$RANDOM" # Repo Working Directory
+RWD="$HOME/tmp/gitolite-admin-$RANDOM" # Repo Working Directory
 
 echo "`basename "$0"`: clonig repo.."
-git clone -b master $GL_REPO_BASE/$GL_REPO $RWD
+git clone -b master $GL_REPO_BASE/gitolite-admin.git $RWD
 
 cd $RWD
 GIT_DIR="$RWD/.git"
@@ -22,8 +22,10 @@ if [ -f "$RWD/server/gitweb.conf" ]; then
   cp -v $RWD/server/gitweb.conf $HOME/gitweb.conf
 fi
 
-if [ -f "$RWD/server/buildbot-master.cfg" ]; then
-  cp -v $RWD/server/buildbot-master.cfg $HOME/master.cfg
+if [ -f "$RWD/server/master.cfg" ]; then
+  sudo /etc/init.d/buildbot stop
+  cp -v $RWD/server/master.cfg /var/lib/buildbot/master.cfg
+  sudo /etc/init.d/buildbot start
 fi
 
 echo "`basename "$0"`: cleaning.."

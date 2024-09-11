@@ -48,8 +48,6 @@ fi
 git config --global user.email "$GIT_ADMIN@simple-git-server"
 git config --global user.name "$GIT_ADMIN"
 
-
-
 ## customize gitolite-admin 
 ### clone current gitolite-admin repo
 cd $GIT_TMP_DIR
@@ -89,6 +87,14 @@ if [ ! -d $GIT_TMP_DIR/gitolite-admin/server/ ]; then
     #### commit the changes
     git add $GIT_TMP_DIR/gitolite-admin/local/hooks/repo-specific/.gitkeep
     git commit -m "create repo specific hook folder"
+    /usr/bin/gitolite push
+
+    ### add buildbot conf file
+    cp /var/lib/buildbot/master.cfg $GIT_TMP_DIR/gitolite-admin/server/master.cfg
+
+    #### commit the changes
+    git add $GIT_TMP_DIR/gitolite-admin/server/master.cfg
+    git commit -m "added buildbot master cfg"
     /usr/bin/gitolite push
 fi
 

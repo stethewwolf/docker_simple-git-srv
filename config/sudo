@@ -1,0 +1,1 @@
+git ALL=(ALL) NOPASSWD: /etc/init.d/buildbot stop, /etc/init.d/buildbot start, /etc/init.d/buildbot restart
