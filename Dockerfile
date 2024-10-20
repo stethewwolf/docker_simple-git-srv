@@ -53,6 +53,9 @@ COPY "./config/gitweb.conf" "/etc/gitweb.conf"
 RUN chmod 644 "/etc/gitweb.conf"
 RUN chown root:root "/etc/gitweb.conf"
 
+## fix user for fcgiwrap
+RUN sed -i 's/www-data/git/g' /etc/init.d/fcgiwrap
+
 ## configure nginx
 RUN sed -i 's/www-data/git/g' /etc/nginx/nginx.conf
 RUN rm -rf /etc/nginx/sites-enabled/default
@@ -130,4 +133,3 @@ ENTRYPOINT ["entrypoint.sh"]
 
 # run sleep infinity
 CMD [ "/usr/bin/sleep", "infinity" ]
-
