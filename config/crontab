@@ -1,3 +1,3 @@
 # crontab for gitolite jobs
 
-0 2 * * * /usr/local/bin/gitolite-mirror
+0 */2 * * *  su -c "/usr/local/bin/gitolite-mirror" $GIT_USER  > /var/log/gitolite-mirror.log

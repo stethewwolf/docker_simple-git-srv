@@ -4,29 +4,43 @@
 
 GITOLITE_CONF_REPO_FOLDER="$GIT_HOME_DIR/.gitolite/conf/repos/"
 GITOLITE_REPO_FOLDER="$GIT_HOME_DIR/repositories"
-REMOTE_REPO_KEY="upstream"
+
 REPO_KEY="repo"
 REMOTE_NAME="upstream"
 
-if [ -d "$GITOLITE_CONF_REPO_FOLDER" ]; then
-    for repo_conf_file in $(ls $GITOLITE_CONF_REPO_FOLDER/); do
-        grep  $REMOTE_REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file 2>&1 > /dev/null 
-        result=$?
-    
-        if [ $result -eq 0 ]; then 
-            remote_url=$(grep $REMOTE_REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file | sed 's/^[   ]*//;s/[    ]*$//' | cut -d " " -f 4 )
-            local_repo=$(grep $REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file | cut -d " " -f 2 )
-    
-            cd $GITOLITE_REPO_FOLDER/$local_repo.git/
-    
-            git remote get-url $REMOTE_NAME 2>&1 > /dev/null 
+declare -a REMOTE_REPO_KEYS=("upstream.url" "remote.url")
+
+for KEY in "${REMOTE_REPO_KEYS[@]}"
+do
+    if [ -d "$GITOLITE_CONF_REPO_FOLDER" ]; then
+        for repo_conf_file in $(ls $GITOLITE_CONF_REPO_FOLDER/); do
+            grep  $KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file 2>&1 > /dev/null 
             result=$?
-            if [ $result -ne 0 ]; then 
-                git remote add --mirror=fetch  $REMOTE_NAME $remote_url
+        
+            if [ $result -eq 0 ]; then 
+                remote_url=$(grep -Eo 'https?://[a-zA-Z0-9./_-]*\.git' $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file) 2>&1 > /dev/null 
+    
+                echo "working on $remote_url"
+                local_repo=$(grep $REPO_KEY $GITOLITE_CONF_REPO_FOLDER/$repo_conf_file | cut -d " " -f 2 )
+        
+                cd $GITOLITE_REPO_FOLDER/$local_repo.git/
+        
+                pwd
+                git remote get-url $REMOTE_NAME 2>&1 > /dev/null 
+                result=$?
+    
+                if [ $result -ne 0 ]; then 
+                    echo "remote is missing"
+                    echo "git remote add --mirror=fetch $REMOTE_NAME $remote_url"
+                    git remote add --mirror=fetch $REMOTE_NAME $remote_url
+                fi
+        
+                git fetch $REMOTE_NAME
+                
+                echo
             fi
-    
-    	    git fetch $REMOTE_NAME
-        fi
-    
-    done
-fi
+        
+        done
+    fi
+done
+
